@@ -1,5 +1,5 @@
 const { Pool } = require("pg");
-const { dbUser, dbHost, database, dbHmac, dbPort } = require("../config");
+const { dbUser, dbHost, database, dbHmac, dbPort, dbURI } = require("../config");
 
 const dbConfig = {
   user: dbUser,
@@ -7,7 +7,8 @@ const dbConfig = {
   database,
   password: dbHmac,
   port: dbPort,
-  max: 10
+  max: 10,
+  ssl: { rejectUnauthorized: false }
 };
 
 var pool = new Pool(dbConfig);

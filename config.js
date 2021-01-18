@@ -7,4 +7,5 @@ module.exports = {
   dbHmac: process.env.DB_HMAC,
   dbPort: process.env.DB_PORT,
   database: process.env.DATABASE,
+  dbURI: process.env.DB_URI,
 };
