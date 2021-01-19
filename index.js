@@ -14,17 +14,8 @@ app.use("/auth", require("./routes/jwtAuth"))
 // dashboard route
 app.use("/dashboard",require("./routes/dashboard"));
 
-app.put('/getcontentdata', async (req, res) => {
-  try {
-    let client = await pool.connect();
-    //await client.query(
-      //`SELECT FROM CONTENT ()`
-    //);
-  } catch (e) {
-    return res.status(500).send({ errorMessage: "Internal Server Error " + e.message });
-  }
-  res.send('Hello World!');
-});
+// get content routes
+app.use("/getContent",require("./routes/dataContent"));
 
 const port = process.env.PORT || 5000;
 
