@@ -1,21 +1,19 @@
 const router = require("express").Router();
-const authorization = require("../middleware/authorization");
 const pool = require("../src/db");
 
-router.get("/", authorization, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-      // req.user.id has the payload
-      // res.json(req.user);
+      const {userID} = req.body;
       const client = await pool.connect();
       try {
-        const user = await client.query(
-          "SELECT user_name FROM users WHERE user_id = $1", [req.user.id]
+        const bookmarkData = await client.query(
+          "SELECT * FROM content WHERE content_id IN (SELECT content_id FROM bookmarks WHERE user_id = $1) ", [userID]
         );
-        res.json(user.rows[0]);
+        res.json(bookmarkData.rows);
         client.release();
       } catch (e) {
         client.release();
-        console.error(err.message);
+        console.error(e.message);
         res.status(500).json("Server error");
       }
   }

@@ -17,7 +17,13 @@ app.use("/dashboard",require("./routes/dashboard"));
 // get content routes
 app.use("/getContent",require("./routes/dataContent"));
 
-const port = process.env.PORT || 5000;
+// save bookmarked content
+app.use("/bookmarkContent",require("./routes/savedContent"));
+
+// get bookmarked content
+app.use("/getbookmarkContent",require("./routes/getBookmarked"));
+
+const port = process.env.PORT;
 
 app.listen(port, function () {
   console.log(`Server up and running on port ${port} !`)

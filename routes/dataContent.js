@@ -3,12 +3,12 @@ const pool = require("../src/db");
 
 router.get("/", async (req, res) => {
   try {
-      let client = await pool.connect();
+      const client = await pool.connect();
       try {
-        const user = await client.query(
+        const contentData = await client.query(
           "SELECT * FROM content WHERE content_date = CAST( NOW() AS DATE );"
         );
-        res.json(user.rows);
+        res.json(contentData.rows);
         client.release();
       } catch (e) {
         client.release();
