@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const pool = require("../src/db");
 
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
       const {userID} = req.body;
       const client = await pool.connect();
