@@ -23,6 +23,9 @@ app.use("/bookmarkContent",require("./routes/savedContent"));
 // get bookmarked content
 app.use("/getbookmarkContent",require("./routes/getBookmarked"));
 
+// get bookmarked content
+app.use("/removebookmarkContent",require("./routes/removeBookmarked"));
+
 const port = process.env.PORT;
 
 app.listen(port, function () {
