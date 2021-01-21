@@ -9,7 +9,7 @@ router.get("/", authorization, async (req, res) => {
       const client = await pool.connect();
       try {
         const user = await client.query(
-          "SELECT user_name FROM users WHERE user_id = $1", [req.user.id]
+          "SELECT user_name, user_id FROM users WHERE user_id = $1", [req.user.id]
         );
         res.json(user.rows[0]);
         client.release();

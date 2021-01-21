@@ -7,7 +7,7 @@ router.post("/", async (req, res) => {
       const client = await pool.connect();
       try {
         await client.query(
-          "DELETE FROM bookmarks WHERE user_id=$1 AND content_id=$2; ", [userID, contentID]
+          "DELETE FROM bookmarks WHERE user_id=$1 AND content_id=$2 ", [userID, contentID]
         );
         res.json("Bookmark Removed");
         client.release();
