@@ -3,11 +3,11 @@ const pool = require("../src/db");
 
 router.post("/", async (req, res) => {
   try {
-      const {userID} = req.body;
+      const {userid} = req.body;
       const client = await pool.connect();
       try {
         const bookmarkData = await client.query(
-          "SELECT * FROM content WHERE content_id IN (SELECT content_id FROM bookmarks WHERE user_id = $1) ", [userID]
+          "SELECT * FROM content WHERE content_id IN (SELECT content_id FROM bookmarks WHERE user_id = $1) ", [userid]
         );
         res.json(bookmarkData.rows);
         client.release();
