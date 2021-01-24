@@ -4,7 +4,10 @@ const bcrypt = require("bcrypt");
 const jwtGenerator = require("../utils/jwtGenerator");
 const validInfo = require("../middleware/validinfo");
 const authorization = require("../middleware/authorization");
+const {OAuth2Client} = require("google-auth-library");
+const { response } = require("express");
 
+const client = new OAuth2Client("1076435734338-q2ntmvrh08r1m7vl96va9n39l2ke1el1.apps.googleusercontent.com");
 
 // registering
 router.post("/register", validInfo, async(req, res) =>{
@@ -110,5 +113,68 @@ router.get("/is-verify", authorization, async (req, res) => {
     }
 });
 
+// for google login
+router.post("/googlelogin", async(req,res)=>{
+  const {tokenId} = req.body;
+
+  
+
+  const response = await client.verifyIdToken({idToken: tokenId, audience: "1076435734338-q2ntmvrh08r1m7vl96va9n39l2ke1el1.apps.googleusercontent.com" });
+
+  const {email_verified, name, email} = response.payload;
+
+    if(email_verified){
+      
+      try {
+        const cclient = await pool.connect();
+
+        try {
+          const user = await cclient.query("SELECT * FROM users WHERE user_email=$1", [
+            email
+          ]);
+          if (user.rows.length ===0){ // ==0 means new user. else account created
+              //  register
+              const saltRound = 10;
+              const salt = await bcrypt.genSalt(saltRound);
+              const password = email+"23bsdbajsb";
+              const bcryptPassword = await bcrypt.hash(password,salt);
+              
+              try {
+                  const newUser =  await cclient.query("INSERT INTO users(user_name,user_email, user_password) VALUES ($1,$2,$3) RETURNING * ", [name,email,bcryptPassword]
+                  );
+                  const token = jwtGenerator(newUser.rows[0].user_id);
+
+                  cclient.release();
+                  res.json({token});
+              } 
+              catch (e) {
+                  console.error(e.message);
+                  cclient.release();
+                  res.status(500).send("Server Error");
+              }    
+          }
+          else{
+            // login              
+            const token = jwtGenerator(user.rows[0].user_id);
+            cclient.release();
+            res.json({ token });              
+          }
+        } 
+        catch (err) {
+          cclient.release();
+          console.log(err.message)
+          res.status(500).send("Server Error");
+        }
+      }
+      catch (e) {
+        console.error(e.message);
+        res.status(500).send("Server Error");
+      }
+    }
+    else{
+      // Email not verified
+    }
+
+});
 
 module.exports = router;
