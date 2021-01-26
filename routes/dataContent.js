@@ -6,7 +6,8 @@ router.get("/", async (req, res) => {
       const client = await pool.connect();
       try {
         const contentData = await client.query(
-          "SELECT * FROM content WHERE content_date = CAST( NOW() AS DATE );"
+          // "SELECT * FROM content WHERE content_date = CAST( NOW() AS DATE );"
+          "SELECT * FROM content ORDER BY RANDOM() LIMIT 3;"
         );
         res.json(contentData.rows);
         client.release();
