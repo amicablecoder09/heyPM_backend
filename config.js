@@ -8,4 +8,5 @@ module.exports = {
   dbPort: process.env.DB_PORT,
   database: process.env.DATABASE,
   dbURI: process.env.DB_URI,
+  googleAudience: process.env.Google_Audience,
 };
