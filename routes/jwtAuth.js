@@ -6,6 +6,7 @@ const validInfo = require("../middleware/validinfo");
 const authorization = require("../middleware/authorization");
 const {OAuth2Client} = require("google-auth-library");
 const { response } = require("express");
+const { googleAudience } = require("../config");
 
 const client = new OAuth2Client("1076435734338-q2ntmvrh08r1m7vl96va9n39l2ke1el1.apps.googleusercontent.com");
 
@@ -119,7 +120,7 @@ router.post("/googlelogin", async(req,res)=>{
 
   
 
-  const response = await client.verifyIdToken({idToken: tokenId, audience: "1076435734338-q2ntmvrh08r1m7vl96va9n39l2ke1el1.apps.googleusercontent.com" });
+  const response = await client.verifyIdToken({idToken: tokenId, audience: googleAudience });
 
   const {email_verified, name, email} = response.payload;
 
